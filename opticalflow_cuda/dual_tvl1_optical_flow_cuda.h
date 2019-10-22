@@ -36,6 +36,8 @@ DenseOpticalFlow_cuda DualTVL1OpticalFlow_create_cuda(double tau = 0.25,
                                                       double scaleStep = 0.8,
                                                       double gamma = 0.0,
                                                       bool useInitialFlow = false);
+
+
 #else
 DenseOpticalFlow_cuda DualTVL1OpticalFlow_create_cuda(double tau /*= 0.25*/,
                                             double lambda /*= 0.15*/,
@@ -47,6 +49,7 @@ DenseOpticalFlow_cuda DualTVL1OpticalFlow_create_cuda(double tau /*= 0.25*/,
                                             double scaleStep /*= 0.8*/,
                                             double gamma /*= 0.0*/,
                                             bool useInitialFlow /*= false*/);
+
 #endif
 
 

@@ -14,3 +14,6 @@ void DenseOpticalFlow_calc_gpu(DenseOpticalFlow algorithm, Mat i0, Mat i1, Mat f
     return;
 }
 
+void DenseOpticalFlow_close(DenseOpticalFlow algorithm) {
+    delete(algorithm);
+}

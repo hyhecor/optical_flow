@@ -73,6 +73,7 @@ void run(char *argv[]) {
 
     DenseOpticalFlow_cuda optflow = DualTVL1OpticalFlow_create_cuda();
 
+
     Mat pre = Mat_New();
     Mat now = Mat_New();
 
@@ -139,5 +140,6 @@ void run(char *argv[]) {
     Mat_Close(now);
     Mat_Close(pre);
 
+    DenseOpticalFlow_close_cuda(optflow);
 
 }

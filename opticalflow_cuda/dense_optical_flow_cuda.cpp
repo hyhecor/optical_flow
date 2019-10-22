@@ -22,7 +22,14 @@ void DenseOpticalFlow_calc_cuda(DenseOpticalFlow_cuda algorithm, Mat i0, Mat i1,
 //    gmat1->download(*i1);
     gmatflow->download(*flow);
 
+    gmat0->release();
+    gmat1->release();
+    gmatflow->release();
 
     return;
+}
+
+void DenseOpticalFlow_close_cuda(DenseOpticalFlow_cuda algorithm) {
+    delete(algorithm);
 }
 

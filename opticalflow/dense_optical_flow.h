@@ -29,10 +29,11 @@ typedef void* DenseOpticalFlow;
 
 
 // flow is Mat same size of i0 and fix type CV_32FC2
-void DenseOpticalFlow_calc(DenseOpticalFlow m, Mat i0, Mat i1, Mat flow);
+void DenseOpticalFlow_calc(DenseOpticalFlow algorithm, Mat i0, Mat i1, Mat flow);
 
-void DenseOpticalFlow_calc_gpu(DenseOpticalFlow m, Mat i0, Mat i1, Mat flow);
+void DenseOpticalFlow_calc_gpu(DenseOpticalFlow algorithm, Mat i0, Mat i1, Mat flow);
 
+void DenseOpticalFlow_close(DenseOpticalFlow algorithm);
 
 #ifdef __cplusplus
 }

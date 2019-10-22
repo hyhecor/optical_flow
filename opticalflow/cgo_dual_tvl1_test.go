@@ -11,8 +11,8 @@ import (
 func BenchmarkDenseOpticalFlow_Calc(b *testing.B) {
 	op := opticalflow.NewDualTVL1Option()
 
-
 	optFlow := opticalflow.DualTVL1OpticalFlowCreate(op)
+	defer optFlow.Close()
 
 	i0 := gocv.IMRead("../img_00001.jpg", gocv.IMReadUnchanged)
 	i1 := gocv.IMRead("../img_00002.jpg", gocv.IMReadUnchanged)
@@ -34,6 +34,7 @@ func BenchmarkDenseOpticalFlow_Calc(b *testing.B) {
 
 func TestCreateDualTVL1OpticalFlow(t *testing.T) {
 	optFlow := opticalflow.DualTVL1OpticalFlowCreate()
+	defer optFlow.Close()
 
 	t.Log(optFlow)
 
@@ -44,6 +45,7 @@ func TestCreateDualTVL1OpticalFlow(t *testing.T) {
 	gocv.CvtColor(i1, &i1, gocv.ColorBGRToGray)
 
 	flow := gocv.NewMatWithSize(i0.Rows(), i0.Cols(), gocv.MatTypeCV32F+gocv.MatChannels2)
+
 
 	t.Log("flow.Type", flow.Type())
 	optFlow.Calc(i0, i1, flow)

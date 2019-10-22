@@ -13,6 +13,15 @@ int main() {
     argv[2] = "/home/h/project/dataset/fire_alert/S1_BMT/VID_20190423_185306.mp4";
 
     split(argv);
-    run(argv);
 
+    auto count = 0;
+    for (;;){
+
+        if (count==100) {
+            break;
+        }
+        count++;
+
+        run(argv);
+    }
 }

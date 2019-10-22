@@ -1,5 +1,7 @@
 package opticalflow_cuda
 
+import "C"
+
 /*
 #include <stdlib.h>
 #include "dense_optical_flow_cuda.h"
@@ -7,31 +9,49 @@ package opticalflow_cuda
 */
 import "C"
 
-//double Tau = 0.25,
-//double Lambda = 0.15,
-//double Theta = 0.3,
-//int Nscales = 5,
-//int Warps = 5,
-//double Epsilon = 0.01,
-//int Iterations = 300,
-//double ScaleStep = 0.8,
-//double Gamma = 0.0,
-//bool UseInitialFlow = false
-type _DualTVL1OptionCuda struct {
-	Tau            float64 //0.25
-	Lambda         float64 //0.15
-	Theta          float64 //0.3
-	Nscales        int     //5
-	Warps          int     //5
-	Epsilon        float64 //0.01
-	Iterations     int     //300
-	ScaleStep      float64 //0.8
+//τ		time step 0.25
+//λ		data attachment weight 0.15
+//θ		tightness 0.3
+//ε		stopping threshold 0.01
+//η		zoom factor 0.5
+//Nscales	number of scales 5
+//Nwarps	number of warps 5
+type DualTVL1OptionCuda struct {
+	//Time step of the numerical scheme.
+	Tau float64 //0.25
+	//Weight parameter for the data term, attachment parameter.
+	//This is the most relevant parameter, which determines the smoothness of the output.
+	//The smaller this parameter is, the smoother the solutions we obtain.
+	//It depends on the range of motions of the images, so its value should be adapted to each image sequence.
+	Lambda float64 //0.15
+	//parameter used for motion estimation. It adds a variable allowing for illumination variations
+	//Set this parameter to 1. if you have varying illumination.
+	//See: Chambolle et al, A First-Order Primal-Dual Algorithm for Convex Problems with Applications to Imaging
+	//Journal of Mathematical imaging and vision, may 2011 Vol 40 issue 1, pp 120-145
+	Theta float64 //0.3
+	//Number of scales used to create the pyramid of images.
+	Nscales int //5
+	//Number of warpings per scale.
+	//Represents the number of times that I1(x+u0) and grad( I1(x+u0) ) are computed per scale.
+	//This is a parameter that assures the stability of the method.
+	//It also affects the running time, so it is a compromise between speed and accuracy.
+	Warps int //5
+	//Stopping criterion threshold used in the numerical scheme, which is a trade-off between precision and running time.
+	//A small value will yield more accurate solutions at the expense of a slower convergence.
+	Epsilon float64 //0.01
+	//Stopping criterion iterations number used in the numerical scheme.
+	Iterations int     //300
+	ScaleStep  float64 //0.8
+	//Weight parameter for (u - v)^2, tightness parameter.
+	//It serves as a link between the attachment and the regularization terms.
+	//In theory, it should have a small value in order to maintain both parts in correspondence.
+	//The method is stable for a large range of values of this parameter.
 	Gamma          float64 //0.0
 	UseInitialFlow bool    //false
 }
 
-func NewDualTVL1Option() _DualTVL1OptionCuda {
-	return _DualTVL1OptionCuda{
+func NewDualTVL1Option() DualTVL1OptionCuda {
+	return DualTVL1OptionCuda{
 		Tau:            0.25,
 		Lambda:         0.15,
 		Theta:          0.3,
@@ -45,14 +65,14 @@ func NewDualTVL1Option() _DualTVL1OptionCuda {
 	}
 }
 
-func DualTVL1OpticalFlowCreate(ops ..._DualTVL1OptionCuda) _DenseOpticalFlowCuda {
+func DualTVL1OpticalFlowCreate(ops ...DualTVL1OptionCuda) DenseOpticalFlowCuda {
 
-	var op _DualTVL1OptionCuda = NewDualTVL1Option()
+	var op DualTVL1OptionCuda = NewDualTVL1Option()
 	if len(ops) > 0 {
 		op = ops[0]
 	}
 
-	return _DenseOpticalFlowCuda{
+	return DenseOpticalFlowCuda{
 		p: C.DualTVL1OpticalFlow_create_cuda(
 			C.double(op.Tau),
 			C.double(op.Lambda),
